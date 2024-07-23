@@ -1,5 +1,5 @@
 {
-  "name": "stt-service",
+  "name": "stt-servce",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,14 +13,19 @@
     "bcrypt": "^5.1.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
-    "mssql": "^11.0.1",
-    "next": "14.2.5",
+    "mssql": "^10.0.1",
+    "next": "^14.0.5-canary.12",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "@types/mssql": "^9.1.4",
+    "@types/node": "20.10.4",
+    "@types/react": "18.2.45",
+    "eslint": "^8.7.0",
+    "eslint-config-next": "14.0.3",
+    "prettier": "2.8.8",
+    "typescript": "5.3.3"
   }
 }
