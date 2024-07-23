@@ -7,6 +7,7 @@ import CounselorInfoTicker from '../../components/CounselorInfoTicker'
 import Cookies from "js-cookie"
 import jwt from "jsonwebtoken"
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import LeftMenuSetting from '../../components/LeftMenuSetting'
@@ -113,7 +114,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>로딩 중...</div>}>
       <div className={'B00'}></div>
       <div className={'B01'}></div>
       <main>
@@ -190,6 +191,6 @@ export default function Home() {
           <Image className={'loading-img'} src='/img/loading.gif' width={400} height={300} alt='로딩' />
         </div> : null}
       </main>
-    </>
+    </Suspense>
   )
 }
