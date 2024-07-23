@@ -29,7 +29,7 @@ export default function Consult() {
   const [psEntry, setPsEntry] = useState('');
   const [psName, setPsName] = useState('');
   const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
+  const [dateTo, setDateTo] = useState(''); 
   const [sorting, setSorting] = useState(0);
 
   useEffect(() => {
