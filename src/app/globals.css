@@ -497,6 +497,9 @@ main {
   display: inline-block;
   color: rgba(255,255,255,1);
 }
+.T09.isAI {
+  padding:10px 20px 10px 45px;
+}
 .T09 .isBack {
   width: 20px;
   height: 20px;
@@ -504,6 +507,16 @@ main {
   left:10px;
   background-position-x: -42.5px;
   background-position-y: -27.5px;
+  border-radius: 5px;
+}
+.T09 .isAI {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left:10px;
+  top:7.5px;
+  background-position-x: -115px;
+  background-position-y: -50px;
   border-radius: 5px;
 }
 .T09:hover {

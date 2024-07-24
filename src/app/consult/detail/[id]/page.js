@@ -511,6 +511,7 @@ export default function Consult(props) {
                   }}>편집모드</p>
                 </div>
               </div>
+              <p className={'T09 isAI'} onClick={e => {router.push(`/`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>
               <div className={styles.C08}>
                 <div className={styles.C06}>
                   <p className={styles.T00}>고객</p>
@@ -676,6 +677,7 @@ export default function Consult(props) {
                     setAudioLoad(true);
                   }} />
                 </div>
+                <p className={styles.T19} style={{display: sourceURL ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
                 <p className={styles.T06} onClick={e => {
                   if(JSON.stringify(dataSegments) == JSON.stringify(dataSegmentsOrigin)) {
                     toast.success('내용 중에 변경된 게 없습니다.');
