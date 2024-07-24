@@ -628,7 +628,7 @@ export default function Consult(props) {
                     {dataConsultInfo.WRONG_LENGTH ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
                 </div>
-                <div className={styles.C22}>
+                <div className={styles.C22} style={{display: sourceURL ? 'inline-block': 'none'}}>
                   <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
                     const player = document.getElementById('audio-player');
                     setPlayPaused(player.paused);
@@ -751,7 +751,7 @@ export default function Consult(props) {
             </div>
           </div>
         </div> : null}
-        {floatingPlayer ?
+        {floatingPlayer && sourceURL ?
           <div className={styles.C26}>
             <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
               const player = document.getElementById('audio-player');
