@@ -518,6 +518,10 @@ export default function Consult(props) {
                   <p className={`T05 isShort isFloat`}>{dataConsultInfo.PSNAME}<span className={`isSex ${getSex(dataConsultInfo.LICENSE) == '여' ? 'isRed' : 'isBlue'}`}>{getSex(dataConsultInfo.LICENSE)}</span>{getAge(dataConsultInfo.LICENSE)}<span className={'isAgeUnit'}>세</span></p>
                 </div>
                 <div className={styles.C06}>
+                  <p className={styles.T00}>상담기수</p>
+                  <p className={styles.T01}>{getDateTime(dataConsultInfo.PERIOD, 0)}</p>
+                </div>
+                <div className={styles.C06}>
                   <p className={styles.T00}>상담사</p>
                   <p className={`T05 isShort isFloat`}>{dataConsultInfo.ADMIN_NAME}<span className={styles.isPosition}>{dataConsultInfo.POSITION_NAME}</span></p>
                 </div>
@@ -616,15 +620,15 @@ export default function Consult(props) {
               <p className={styles.T16}>{getTimeOnly(dataConsultInfo.END_TIME, 0)} - 상담 종료 이벤트 발생</p>
               <div className={styles.C17}>
                 <div className={styles.C28}>
-                  <div className={styles.C06}>
+                  <div className={styles.C29}>
                     <p className={styles.T00}>시작 검사</p>
                     {dataConsultInfo.WRONG_FOOT ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
-                  <div className={styles.C06}>
+                  <div className={styles.C29}>
                     <p className={styles.T00}>종료 검사</p>
                     {dataConsultInfo.WRONG_ENDING ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
-                  <div className={styles.C06}>
+                  <div className={styles.C29}>
                     <p className={styles.T00}>시간 검사</p>
                     {dataConsultInfo.WRONG_LENGTH ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
