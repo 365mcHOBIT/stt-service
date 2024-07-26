@@ -74,14 +74,6 @@ export default function Consult(props) {
   }, [])
 
   useEffect(() => {
-    if(is2xSpeed) {
-      document.getElementById('audio-player').playbackRate = 1.3;
-    }else {
-      document.getElementById('audio-player').playbackRate = 1;
-    }
-  }, [is2xSpeed])
-
-  useEffect(() => {
     updateDimensions();
     if(dataSegments[0]) {
       if(dataSegments[0].ADMIN_id) {
@@ -94,11 +86,6 @@ export default function Consult(props) {
         }
       }
     }
-    // setRefTextAreas(refTextAreas =>
-    //   Array(dataSegments.length)
-    //     .fill()
-    //     .map((_, i) => refTextAreas[i] || createRef()),
-    // );
     if(Cookies.get("USER_id")) {
       setUserID(Cookies.get("USER_id"));
     }
@@ -143,27 +130,10 @@ export default function Consult(props) {
   }, [roomID])
 
   useEffect(() => {
-    if(document.getElementById('audio-player').duration) {
-      setRemainTime(new Date(Number(document.getElementById('audio-player').duration) * 1000).toISOString().slice(11, 19));
-    }
-    updateDimensions();
-    handleScroll();
-    handleResize();
-    window.addEventListener('scroll', handleScroll);
-		return () => {
-			window.removeEventListener('scroll', handleScroll)
-		}
-  }, [isAudioLoad])
-
-  useEffect(() => {
     if(dataArticleSegments.length > 0) setOpenedPopup(true);
   }, [dataArticleSegments])
 
   useEffect(() => {
-    if(dataConsultInfo.START_TIME) {
-      const date = dataConsultInfo.START_TIME.replace('-', '').replace('-', '').substring(0,8);
-      setSourceURL(`https://365mcstt.synology.me:8081/stt_data/${date}/${dataConsultInfo.PSENTRY}/${dataConsultInfo.WAV_FILE_NAME}`);
-    }
     if(dataConsultInfo.BRANCH_id) boostListRoom();
   }, [dataConsultInfo])
 
@@ -498,20 +468,7 @@ export default function Consult(props) {
         <div className={styles.C01}>
           <div className={styles.C02} ref={targetRef}>
             <div className={styles.C04}>
-              <p className={'T09'} onClick={e => router.back()}><span className={'styleSheet isBack'}></span>상담목록</p>
-              <div className={styles.C07}>
-                <div className={styles.C09}>
-                  <p className={`${styles.T04} ${editMode ? null: styles.isSelected }`} onClick={e => {
-                    setEditMode(false);
-                    setSegmentMenuIndex(null);
-                  }}>읽기모드</p>
-                  <p className={`${styles.T04} ${editMode ? styles.isSelected : null}`} onClick={e => {
-                    setEditMode(true);
-                    setSegmentMenuIndex(null);
-                  }}>편집모드</p>
-                </div>
-              </div>
-              <p className={'T09 isAI'} onClick={e => {router.push(`/consult/analysis/${props.params.id}`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>
+              <p className={'T09'} onClick={e => router.back()}><span className={'styleSheet isBack'}></span>뒤로가기</p>
               <div className={styles.C08}>
                 <div className={styles.C06}>
                   <p className={styles.T00}>고객</p>
@@ -548,194 +505,7 @@ export default function Consult(props) {
               </div>
             </div>
             <div className={styles.C05}>
-            <p className={styles.T15}>{getTimeOnly(dataConsultInfo.START_TIME, 0)} - 상담 시작 이벤트 발생</p>
-              {dataSegments.length > 0 && defaultSpeaker && dataSegmentsOrigin.length > 0 && dataSegments.map((segment, index) => {
-                return(
-                  <div className={`${styles.CSegment}
-                    ${((segment.ADMIN_id != null || segment.CLIENT_id != null) && defaultSpeaker != segment.ADMIN_id && defaultSpeaker != segment.CLIENT_id) || (segment.ADMIN_id == null && segment.CLIENT_id == null && defaultSpeaker != segment.SPEAKER) ? styles.isRight : ''}`} key={index}>
-                    {editMode ? (<div className={`${styles.CSegmentInfo} ${
-                      segment.ADMIN_id == dataSegmentsOrigin[index].ADMIN_id 
-                    && segment.CLIENT_id == dataSegmentsOrigin[index].CLIENT_id ? '' : styles.isChanged}`} onClick={e => {
-                      if(segment.ADMIN_id == null && segment.CLIENT_id == null) {
-                        setNumberTicker(index);
-                      }else {
-                        if(numberTicker == null) {
-                          if(segment.ADMIN_id == null) {
-                            changeSegmentSpeecher(index, 'ADMIN');
-                          } else if(segment.CLIENT_id == null) {
-                            changeSegmentSpeecher(index, 'CLIENT');
-                          }
-                        }
-                      }
-                    }}>
-                      <p className={`${styles.T03}`}>{segment.ADMIN_id == null ? segment.CLIENT_id == null ? '화자' : '고객' : '관리자' }: <span>{returnSpeecher(segment.ADMIN_id, segment.CLIENT_id, segment.NICK_NAME, segment.SPEAKER)}</span></p>
-                      {numberTicker == index ? (<div className={styles.C16} ref={refTicker}>
-                        <div className={styles.C18} onClick={e => {
-                          changeSegmentSpeecher(index, 'NONE');
-                        }}><p className={styles.T10}><span className={styles.isPosition}>-- 분류 초기화 --</span></p><div className={`${styles.isSelector} styleSheet ${
-                          segment.ADMIN_id == null
-                        && segment.CLIENT_id == null ? styles.isSelected : null}`}></div></div>
-                        <div className={styles.C18} onClick={e => {
-                          changeSegmentSpeecher(index, 'ADMIN');
-                        }}><p className={styles.T10}><span className={styles.isPosition}>{dataConsultInfo.POSITION_NAME}:</span>{dataConsultInfo.ADMIN_NAME}</p><div className={`${styles.isSelector} styleSheet ${
-                          segment.ADMIN_id != null ? styles.isSelected : null}`}></div></div>
-                        <div className={styles.C18} onClick={e => {
-                          changeSegmentSpeecher(index, 'CLIENT');
-                        }}><p className={styles.T10}><span className={styles.isPosition}>고객:</span>{dataConsultInfo.PSNAME}</p><div className={`${styles.isSelector} styleSheet ${
-                          segment.CLIENT_id != null ? styles.isSelected : null}`}></div></div>
-                        {/* <div className={styles.C18}><p className={styles.T10}><span className={styles.isPosition}>외부인:</span>홍길동</p><div className={`${styles.isSelector} styleSheet`}></div></div> */}
-                        {/* <div className={styles.C18}>
-                          <input className={styles.I00} />
-                          <p className={styles.T11}>추가</p>
-                        </div> */}
-                      </div>) : null}
-                      <p className={`${styles.T02} ${segment.CONFIDENCE > .9 ? styles.P90 : segment.CONFIDENCE > .8 ? styles.P80 : segment.CONFIDENCE > .7 ? styles.P70 : segment.CONFIDENCE > .6 ? styles.P60 : null}`}><span>{(segment.CONFIDENCE*100).toFixed(1)}</span></p>
-                    </div>) : (<p className={`${styles.T05} heightElement ${segment.START_TIME < currentTimeGage*1000 && segment.END_TIME > currentTimeGage*1000 ? styles.isHighlight : null}`} onDoubleClick={e => {
-                      setSegmentMenuTop(e.pageY);
-                      setSegmentMenuLeft(e.pageX);
-                      setSegmentMenuIndex(index);
-                      setShowSegmentMenu(true);
-                    }}><span>{returnSpeecher(segment.ADMIN_id, segment.CLIENT_id, segment.NICK_NAME, segment.SPEAKER)}: </span>{segment.TEXT}</p>)}
-                    {editMode ? (
-                    <div className={`${styles.CEdit}
-                      ${segment.START_TIME < currentTimeGage*1000 && segment.END_TIME > currentTimeGage*1000 ? styles.isHighlight : null}
-                      ${segment.TEXT == dataSegmentsOrigin[index].TEXT ? '' : styles.isChanged}`} onDoubleClick={e => {
-                        setSegmentMenuTop(e.pageY);
-                        setSegmentMenuLeft(e.pageX);
-                        setSegmentMenuIndex(index);
-                        setShowSegmentMenu(true);
-                      }}>
-                      <textarea id={`textArea${index}`} className={'isResizable'} value={segment.TEXT} onChange={e => changeSegment(index, e)} />
-                    </div>) : null}
-                    {/* {editMode && segment.words && segment.words.map((word, index2) => {
-                      return(
-                        <div className={`${styles.CWord} ${data.segments[index].words[index2][2] == originData.segments[index].words[index2][2] ? '' : styles.isChanged}`} key={index2}>
-                          <input type='text' size={word[2].length*1.8} value={word[2]} onChange={e => changeWord(index, index2, e.target.value)} />
-                        </div>
-                      )
-                    })} */}
-                  </div>
-                );
-              })}
-              <p className={styles.T16}>{getTimeOnly(dataConsultInfo.END_TIME, 0)} - 상담 종료 이벤트 발생</p>
-              <div className={styles.C17}>
-                <div className={styles.C28}>
-                  <div className={styles.C29}>
-                    <p className={styles.T00}>시작 검사</p>
-                    {dataConsultInfo.WRONG_FOOT ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
-                  </div>
-                  <div className={styles.C29}>
-                    <p className={styles.T00}>종료 검사</p>
-                    {dataConsultInfo.WRONG_ENDING ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
-                  </div>
-                  <div className={styles.C29}>
-                    <p className={styles.T00}>시간 검사</p>
-                    {dataConsultInfo.WRONG_LENGTH ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
-                  </div>
-                </div>
-                <div className={styles.C22} style={{display: sourceURL ? 'inline-block': 'none'}}>
-                  <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
-                    const player = document.getElementById('audio-player');
-                    setPlayPaused(player.paused);
-                    if(player.paused) {
-                      player.play();
-                      setPlaying(true);
-                    }else {
-                      player.pause();
-                      setPlaying(false);
-                    }
-                  }}></div>
-                  <div className={`${styles.BStop} styleSheet`} onClick={e => {
-                    const player = document.getElementById('audio-player');
-                    player.currentTime = 0;
-                    setRunTime(0);
-                    player.pause();
-                    setPlaying(false);
-                    setPlayPaused(false);
-                  }}></div>
-                  <p className={styles.T11}>{currentTime}</p>
-                  <div className={styles.C23} onClick={e => {
-                    if(e.clientX - e.currentTarget.getBoundingClientRect().left >= 17
-                    && e.clientX - e.currentTarget.getBoundingClientRect().left <= e.currentTarget.getBoundingClientRect().width - 17) {
-                      setRunTime((e.clientX - e.currentTarget.getBoundingClientRect().left - 17) / (e.currentTarget.getBoundingClientRect().width - 34) * 100);
-                      const player = document.getElementById('audio-player');
-                      player.currentTime = (e.clientX - e.currentTarget.getBoundingClientRect().left - 17) / (e.currentTarget.getBoundingClientRect().width - 34) * Number(document.getElementById('audio-player').duration)
-                    }
-                  }}>
-                    <div className={styles.C24}></div>
-                    <div className={styles.C25} style={{width: `calc(${runTime}% - ${.34*runTime}px)`}}></div>
-                  </div>
-                  <p className={styles.T11}>{remainTime}</p>
-                  <p className={`${styles.T13} ${is2xSpeed ? styles.isSelected : null}`} onClick={e => {
-                    set2xSpeed(!is2xSpeed);
-                  }}>x1.3</p>
-                  <audio id='audio-player' src={sourceURL} type="audio/mpeg"
-                  onTimeUpdate={e => {
-                    setCurrentTimeGage(e.currentTarget.currentTime);
-                    setCurrentTime(new Date(e.currentTarget.currentTime * 1000).toISOString().slice(11, 19));
-                    if(currentTimeGage && remainTime && isPlaying) {
-                      setRunTime(currentTimeGage / Number(document.getElementById('audio-player').duration) * 100);
-                    }
-                  }}
-                  onCanPlay={e => {
-                    setAudioLoad(true);
-                  }} />
-                </div>
-                <p className={styles.T19} style={{display: sourceURL ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
-                <p className={styles.T06} onClick={e => {
-                  if(JSON.stringify(dataSegments) == JSON.stringify(dataSegmentsOrigin)) {
-                    toast.success('내용 중에 변경된 게 없습니다.');
-                  }else {
-                    boostUpdate();
-                  }
-                }}>편집완료</p>
-              </div>
-              {isShowSegmentMenu ? <div className={styles.C27} ref={refSegmentMenu} style={{
-                top: `${segmentMenuTop-200}px`,
-                left: `${segmentMenuLeft-50}px`}}>
-                <p className={styles.T12} onClick={e => {
-                  const player = document.getElementById('audio-player');
-                  player.currentTime = dataSegments[segmentMenuIndex].START_TIME / 1000;
-                  setRunTime(dataSegments[segmentMenuIndex].START_TIME / 10 / player.duration);
-                  player.pause();
-                  setPlaying(false);
-                  setPlayPaused(false);
-                  setShowSegmentMenu(false);
-                  setEditMode(true);
-                  setCurrentTimeGage(dataSegments[segmentMenuIndex].START_TIME / 1000);
-                }}>이 문단 편집하기</p>
-                <p className={styles.T12} onClick={e => {
-                  const player = document.getElementById('audio-player');
-                  player.currentTime = dataSegments[segmentMenuIndex].START_TIME / 1000;
-                  setRunTime(dataSegments[segmentMenuIndex].START_TIME / 10 / player.duration);
-                  player.play();
-                  setPlaying(true);
-                  setPlayPaused(true);
-                  setShowSegmentMenu(false);
-                }}>이 문단부터 읽기</p>
-              </div> : null}
-            </div>
-            <div className={styles.C15}>
-              <div className={styles.C10}>
-                <div style={{width: (dataArticles.length * 260 - 20) + 'px'}}>
-                  {dataArticles.length > 0 && dataArticles.map((article, index) => {
-                    return (
-                      <div className={styles.C11} key={index} onClick={e => {
-                        if(index != 0) {
-                          boostGetArticle(dataArticles[index].ARTICLE_ID);
-                        }
-                      }}>
-                        {index == dataArticles.length-1 
-                        ? <p className={styles.T09}>{getDateTime(article.createdAt[0], 0)} 등록 <span className={styles.isRed}>원본 보기</span></p>
-                        : index == 0 ? <p className={styles.T09}>{getDateTime(article.createdAt[0], 0)} 수정 <span className={styles.isGreen}>최종본 보기</span></p>
-                        : <p className={styles.T09}>{getDateTime(article.createdAt[0], 0)} 수정 <span>수정본 보기</span></p>}
-                        <p className={styles.T17}>{index == dataArticles.length-1 
-                        ? `등록` : `수정`}: <span className={styles.isBranch}>{article.BRANCH_NAME}</span> {article.POSITION_NAME} <span style={{fontSize: '1.2em'}}>{article.ADMIN_NAME}</span></p>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
+              
             </div>
           </div>
           <div className={styles.C03} style={{height: dimensions.height+'px'}}>
