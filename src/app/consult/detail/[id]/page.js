@@ -519,7 +519,7 @@ export default function Consult(props) {
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담기수</p>
-                  <p className={styles.T01}>{getDateTime(dataConsultInfo.PERIOD, 0)}</p>
+                  <p className={styles.T01}>{dataConsultInfo.PERIOD}</p>
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담사</p>
