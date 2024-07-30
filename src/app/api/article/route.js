@@ -52,11 +52,11 @@ export async function POST(request) {
         }
       }
       if(roomID) {
-        const data3 = await ExecuteQuery(`INSERT INTO CORE_CONSULTS (START_TIME, END_TIME, ADMIN_id, BRANCH_id, CLIENT_id, WAV_FILE_NAME, ROOM_id, createdAt)
-        VALUES (CONVERT(DATETIME, '${query.startTime}'), CONVERT(DATETIME, '${query.endTime}'), ${adminID}, ${branchID}, ${clientID}, '${query.wavFileName}', ${roomID}, SYSDATETIME())`);
+        const data3 = await ExecuteQuery(`INSERT INTO CORE_CONSULTS (START_TIME, END_TIME, ADMIN_id, BRANCH_id, CLIENT_id, WAV_FILE_NAME, ROOM_id, PERIOD, createdAt)
+        VALUES (CONVERT(DATETIME, '${query.startTime}'), CONVERT(DATETIME, '${query.endTime}'), ${adminID}, ${branchID}, ${clientID}, '${query.wavFileName}', ${roomID}, ${query.period}, SYSDATETIME())`);
       }else {
-        const data3 = await ExecuteQuery(`INSERT INTO CORE_CONSULTS (START_TIME, END_TIME, ADMIN_id, BRANCH_id, CLIENT_id, WAV_FILE_NAME, createdAt)
-        VALUES (CONVERT(DATETIME, '${query.startTime}'), CONVERT(DATETIME, '${query.endTime}'), ${adminID}, ${branchID}, ${clientID}, '${query.wavFileName}', SYSDATETIME())`);
+        const data3 = await ExecuteQuery(`INSERT INTO CORE_CONSULTS (START_TIME, END_TIME, ADMIN_id, BRANCH_id, CLIENT_id, WAV_FILE_NAME, PERIOD, createdAt)
+        VALUES (CONVERT(DATETIME, '${query.startTime}'), CONVERT(DATETIME, '${query.endTime}'), ${adminID}, ${branchID}, ${clientID}, '${query.wavFileName}', ${query.period}, SYSDATETIME())`);
       }
       const data30 = await ExecuteQuery(`SELECT IDENT_CURRENT('CORE_CONSULTS') AS LAST_ID`);
       const consultID = data30[0].LAST_ID;
