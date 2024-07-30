@@ -47,6 +47,7 @@ export default function Consult(props) {
   const [is2xSpeed, set2xSpeed] = useState(false);
   const [currentScrollHeightIndex, setCurrentScrollHeightIndex] = useState(null);
   const [userID, setUserID] = useState();
+  const [isExistWavFile, setExistWavFile] = useState(true);
 
   const handleKeyPress = e => {
     if(e.key == 'ArrowRight') {
@@ -476,6 +477,26 @@ export default function Consult(props) {
     ])
   }
 
+  const handleError = (err) => {
+    setExistWavFile(false);
+  }
+
+  useEffect(() => {
+    const checkFileExists = async () => {
+      try {
+        const response = await fetch(sourceURL, { method: 'HEAD' });
+        if (response.ok) {
+          
+        } else {
+          setExistWavFile(false);
+        }
+      } catch (err) {
+        setExistWavFile(false);
+      }
+    };
+    checkFileExists();
+  }, [sourceURL]);
+
   const returnSpeecher = (a, c, g, s) => {
     if(a == dataConsultInfo.ADMIN_id) return dataConsultInfo.ADMIN_NAME;
     if(c == dataConsultInfo.CLIENT_id) return dataConsultInfo.PSNAME;
@@ -633,7 +654,7 @@ export default function Consult(props) {
                     {dataConsultInfo.WRONG_LENGTH ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
                 </div>
-                <div className={styles.C22} style={{display: sourceURL ? 'inline-block': 'none'}}>
+                <div className={styles.C22} style={{display: isExistWavFile ? 'inline-block': 'none'}}>
                   <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
                     const player = document.getElementById('audio-player');
                     setPlayPaused(player.paused);
@@ -670,6 +691,7 @@ export default function Consult(props) {
                     set2xSpeed(!is2xSpeed);
                   }}>x1.3</p>
                   <audio id='audio-player' src={sourceURL} type="audio/mpeg"
+                  onError={handleError}
                   onTimeUpdate={e => {
                     setCurrentTimeGage(e.currentTarget.currentTime);
                     setCurrentTime(new Date(e.currentTarget.currentTime * 1000).toISOString().slice(11, 19));
@@ -681,7 +703,7 @@ export default function Consult(props) {
                     setAudioLoad(true);
                   }} />
                 </div>
-                <p className={styles.T19} style={{display: sourceURL ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
+                <p className={styles.T19} style={{display: isExistWavFile ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
                 <p className={styles.T06} onClick={e => {
                   if(JSON.stringify(dataSegments) == JSON.stringify(dataSegmentsOrigin)) {
                     toast.success('내용 중에 변경된 게 없습니다.');
@@ -757,7 +779,7 @@ export default function Consult(props) {
             </div>
           </div>
         </div> : null}
-        {floatingPlayer && sourceURL ?
+        {floatingPlayer && isExistWavFile ?
           <div className={styles.C26}>
             <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
               const player = document.getElementById('audio-player');
