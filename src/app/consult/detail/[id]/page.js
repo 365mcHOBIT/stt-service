@@ -481,21 +481,21 @@ export default function Consult(props) {
     setExistWavFile(false);
   }
 
-  useEffect(() => {
-    const checkFileExists = async () => {
-      try {
-        const response = await fetch(sourceURL, { method: 'HEAD' });
-        if (response.ok) {
+  // useEffect(() => {
+  //   const checkFileExists = async () => {
+  //     try {
+  //       const response = await fetch(sourceURL, { method: 'GET' });
+  //       if (response.ok) {
           
-        } else {
-          setExistWavFile(false);
-        }
-      } catch (err) {
-        setExistWavFile(false);
-      }
-    };
-    checkFileExists();
-  }, [sourceURL]);
+  //       } else {
+  //         setExistWavFile(false);
+  //       }
+  //     } catch (err) {
+  //       setExistWavFile(false);
+  //     }
+  //   };
+  //   checkFileExists();
+  // }, [sourceURL]);
 
   const returnSpeecher = (a, c, g, s) => {
     if(a == dataConsultInfo.ADMIN_id) return dataConsultInfo.ADMIN_NAME;
