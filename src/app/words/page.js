@@ -86,12 +86,16 @@ export default function Consult() {
     if(userID && positionID) {
       boostListData();
     }
-  }, [indexBoard, userID, positionID]);
+  }, [indexBoard, userID, positionID, sorting]);
   
   useEffect(() => {
     updateDimensions();
     boostListDataBranches();
   }, [data]);
+
+  useEffect(() => {
+    setIndexBoard(1);
+  }, [sorting]);
 
   useLayoutEffect(() => {
     if(targetRef.current) {
