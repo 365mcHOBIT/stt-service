@@ -84,7 +84,7 @@ export default function Consult() {
     if(userID && positionID) {
       boostListData();
     }
-  }, [indexBoard, userID, positionID, sorting]);
+  }, [indexBoard, userID, positionID, sorting, dateFrom, dateTo]);
   
   useEffect(() => {
     updateDimensions();
