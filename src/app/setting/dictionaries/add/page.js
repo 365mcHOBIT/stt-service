@@ -123,7 +123,7 @@ export default function Home() {
             <div className={styles.C05}>
               <p className={styles.T01}>신규 키워드</p>
               <input className={styles.I00} maxLength={16} onChange={e => {
-                (e.currentTarget.value.length > 1) ? setValidated0(true) : setValidated0(false);
+                (e.currentTarget.value.length >= 1) ? setValidated0(true) : setValidated0(false);
                 setKeyword(e.currentTarget.value);
               }} />
               {isValidated0 ? <p className={styles.T03}>등록 가능합니다.</p> : <p className={styles.T02}>글자수가 모자랍니다.</p> }
