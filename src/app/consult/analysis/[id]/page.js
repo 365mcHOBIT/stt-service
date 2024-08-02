@@ -47,6 +47,8 @@ export default function Consult(props) {
   const [is2xSpeed, set2xSpeed] = useState(false);
   const [currentScrollHeightIndex, setCurrentScrollHeightIndex] = useState(null);
   const [userID, setUserID] = useState();
+  const [abridgment, setAbridgment] = useState('');
+  const [keywords, setKeywords] = useState([]);
 
   const handleKeyPress = e => {
     if(e.key == 'ArrowRight') {
@@ -74,7 +76,6 @@ export default function Consult(props) {
   }, [])
 
   useEffect(() => {
-    updateDimensions();
     if(dataSegments[0]) {
       if(dataSegments[0].ADMIN_id) {
         setDefaultSpeaker(dataSegments[0].ADMIN_id);
@@ -136,6 +137,10 @@ export default function Consult(props) {
   useEffect(() => {
     if(dataConsultInfo.BRANCH_id) boostListRoom();
   }, [dataConsultInfo])
+
+  useEffect(() => {
+    updateDimensions();
+  }, [keywords])
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -275,6 +280,29 @@ export default function Consult(props) {
         setDataArticles(content.articles);
         setDataSegments(content.segments);
         setDataSegmentsOrigin(JSON.parse(JSON.stringify(content.segments)));
+        setLoader(false);
+        boostGetAnalysis();
+      }else {
+        setLoader(false);
+        toast.error(content.message);
+      }
+    } catch (error) {
+      setLoader(false);
+      toast.error(error.message);
+    }
+  };
+
+  const boostGetAnalysis = async () => {
+    try {
+      setLoader(true);
+      let url = `/api/analysis/${props.params.id}`;
+      const insert = await fetch(url, {
+        method: 'GET',
+      });
+      const content = await insert.json();
+      if(content.success) {
+        setAbridgment(content.abridgment);
+        setKeywords(content.keywords);
         setLoader(false);
       }else {
         setLoader(false);
@@ -505,7 +533,16 @@ export default function Consult(props) {
               </div>
             </div>
             <div className={styles.C05}>
-              
+              <p className={styles.T02}>상담 내용 요약</p>
+              <p className={styles.T03}>{`" ${abridgment} "`}</p>
+            </div>
+            <div className={styles.C15}>
+              <p className={styles.T02}>키워드 분석</p>
+              <div className={styles.C07}>
+                {keywords.length > 0 && keywords.map((item, index) => {
+                  return <div className={styles.C09} key={index}><p className={styles.T04}>{item.COUNT}</p><p className={styles.T06}>{item.WORD}</p></div>
+                })}
+              </div>
             </div>
           </div>
           <div className={styles.C03} style={{height: dimensions.height+'px'}}>
@@ -514,71 +551,6 @@ export default function Consult(props) {
             </div>
           </div>
         </div>
-        {isOpenedPopup ? <div className={styles.popup}>
-          <div className={styles.C20} onClick={e => {
-            setOpenedPopup(false);
-          }}></div>
-          <div className={styles.C19}>
-            <div className={styles.C21}>
-              {dataArticleSegments.length > 0 && dataArticleSegments.map((segment, index) => {
-                return (
-                  <div key={index} className={`${styles.CSegment}`}><p className={styles.T05}><span>{returnSpeecher(segment.ADMIN_id, segment.CLIENT_id, segment.NICK_NAME, segment.SPEAKER)}: </span>{segment.TEXT}</p></div>
-              )})}
-            </div>
-          </div>
-        </div> : null}
-        {floatingPlayer && sourceURL ?
-          <div className={styles.C26}>
-            <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
-              const player = document.getElementById('audio-player');
-              setPlayPaused(player.paused);
-              if(player.paused) {
-                player.play();
-                setPlaying(true);
-              }else {
-                player.pause();
-                setPlaying(false);
-              }
-            }}></div>
-            <div className={`${styles.BStop} styleSheet`} onClick={e => {
-              const player = document.getElementById('audio-player');
-              player.currentTime = 0;
-              setRunTime(0);
-              player.pause();
-              setPlaying(false);
-              setPlayPaused(false);
-            }}></div>
-            <p className={styles.T11}>{currentTime}</p>
-            <div className={styles.C23} onClick={e => {
-              if(e.clientX - e.currentTarget.getBoundingClientRect().left >= 17
-              && e.clientX - e.currentTarget.getBoundingClientRect().left <= e.currentTarget.getBoundingClientRect().width - 17) {
-                setRunTime((e.clientX - e.currentTarget.getBoundingClientRect().left - 17) / (e.currentTarget.getBoundingClientRect().width - 34) * 100);
-                const player = document.getElementById('audio-player');
-                player.currentTime = (e.clientX - e.currentTarget.getBoundingClientRect().left - 17) / (e.currentTarget.getBoundingClientRect().width - 34) * Number(document.getElementById('audio-player').duration)
-              }
-            }}>
-              <div className={styles.C24}></div>
-              <div className={styles.C25} style={{width: `calc(${runTime}% - ${.34*runTime}px)`}}></div>
-            </div>
-            <p className={styles.T11}>{remainTime}</p>
-            <p className={`${styles.T13} ${is2xSpeed ? styles.isSelected : null}`} onClick={e => {
-              set2xSpeed(!is2xSpeed);
-            }}>x1.3</p>
-            <a href={sourceURL} download={`${dataConsultInfo.PSENTRY}-${dataConsultInfo.START_TIME}`}>
-             <button className={styles.T18}>다운로드</button>
-           </a>
-            <audio id='audio-player' src={sourceURL} type="audio/mpeg"
-            onTimeUpdate={e => {
-              setCurrentTimeGage(e.currentTarget.currentTime);
-              setCurrentTime(new Date(e.currentTarget.currentTime * 1000).toISOString().slice(11, 19));
-              if(currentTimeGage && remainTime && isPlaying) {
-                setRunTime(currentTimeGage / Number(document.getElementById('audio-player').duration) * 100);
-              }
-            }}
-            onCanPlay={e => {
-              setAudioLoad(true);
-            }} />
-          </div> : null}
         {isLoader ? <div className={'loading'}>
           <div className={'loading-back'}></div>
           <Image className={'loading-img'} src='/img/loading.gif' width={400} height={300} alt='로딩' />

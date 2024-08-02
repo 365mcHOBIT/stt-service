@@ -48,6 +48,7 @@ export default function Consult(props) {
   const [currentScrollHeightIndex, setCurrentScrollHeightIndex] = useState(null);
   const [userID, setUserID] = useState();
   const [isExistWavFile, setExistWavFile] = useState(true);
+  const [existAnalysis, setExistAnalysis] = useState(0);
 
   const handleKeyPress = e => {
     if(e.key == 'ArrowRight') {
@@ -306,6 +307,7 @@ export default function Consult(props) {
         setDataArticles(content.articles);
         setDataSegments(content.segments);
         setDataSegmentsOrigin(JSON.parse(JSON.stringify(content.segments)));
+        setExistAnalysis(content.existAnalysis);
         setLoader(false);
       }else {
         setLoader(false);
@@ -532,7 +534,7 @@ export default function Consult(props) {
                   }}>편집모드</p>
                 </div>
               </div>
-              <p className={'T09 isAI'} onClick={e => {router.push(`/consult/analysis/${props.params.id}`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>
+              {existAnalysis > 0 ?<p className={'T09 isAI'} onClick={e => {router.push(`/consult/analysis/${props.params.id}`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>:<p className={styles.T20}>AI 분석 안됨</p>}
               <div className={styles.C08}>
                 <div className={styles.C06}>
                   <p className={styles.T00}>고객</p>
