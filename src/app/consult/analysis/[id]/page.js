@@ -504,7 +504,7 @@ export default function Consult(props) {
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담기수</p>
-                  <p className={styles.T01}>{dataConsultInfo.PERIOD}</p>
+                  {dataConsultInfo.PERIOD ? <p className={styles.T01}>{`${dataConsultInfo.PERIOD}기 (${dataConsultInfo.PERIOD == 0 || dataConsultInfo.PERIOD == 1 ? '신환': '재환'})`}</p>:null}
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담사</p>
