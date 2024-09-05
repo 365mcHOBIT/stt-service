@@ -497,6 +497,7 @@ export default function Consult(props) {
   //     }
   //   };
   //   checkFileExists();
+  // console.log(sourceURL)
   // }, [sourceURL]);
 
   const returnSpeecher = (a, c, g, s) => {
