@@ -84,7 +84,7 @@ export default function Consult() {
     if(userID && positionID) {
       boostListData();
     }
-  }, [indexBoard, userID, positionID]);
+  }, [indexBoard, userID, positionID, sorting, dateFrom, dateTo]);
   
   useEffect(() => {
     updateDimensions();
@@ -309,9 +309,28 @@ export default function Consult() {
               </div>
               <div className={'C05'}>
               {data && data.map((item, index) => {
-                // return <Link key={index} href={item.CONSULT_id ? `/emrConsult/detail/${item.CONSULT_id}`: `/emrConsult/timeline/${item.PSENTRY}/${item.MEETDATE}`} scroll={false}>
-                return <Link key={index} href={item.CONSULT_id ? `/consult/detail/${item.CONSULT_id}` : `javascript:alert('(현재 개발중입니다.) 클로바 텍스트 변환+분석이 안된 상담은 해당 고객의 당일 진료 타임라인을 보여줍니다.')`} scroll={false}>
-                  <div className={'C02'} style={{opacity: 
+                if(item.CONSULT_id) {
+                  return <Link key={index} href={`/consult/detail/${item.CONSULT_id}`} scroll={false}>
+                    <div className={'C02'} style={{opacity: 
+                    item.CONSULT_id ? 1 : .3}}>
+                      <p className={'T05 P20'}>{positionID == 11 ? <>ㅤ<span className={'isBranch'}>{item.BRANCH_NAME}</span><span className={'isPsentry'}>{item.PSENTRY}</span></> : <>{item.PSENTRY}</>}</p>
+                      <p className={'T05 P20'}>{item.PSNAME}<span className={`isSex ${getSex(item.LICENSE) == '여' ? 'isRed' : 'isBlue'}`}>{getSex(item.LICENSE)}</span>{getAge(item.LICENSE)}<span className={'isAgeUnit'}>세</span></p>
+                      <p className={'T05 P20'}>{positionID == 11 ? <>ㅤ<span className={'isStartTime'}>{getDateTime(item.START_TIME, 0)}</span><span className={'isPsentry'}><span className={'isThin'}>시간:</span> {returnTimeHHMM(new Date(item.END_TIME).getTime() - new Date(item.START_TIME).getTime())}</span></> : getDateTime(item.START_TIME, 0)}</p>
+                      <p className={'T05 P20'}>{positionID == 11 ? <>{item.ADMIN_NAME}<span className={'isPosition'}>{item.POSITION_NAME}</span></> : returnTimeHHMM(new Date(item.END_TIME).getTime() - new Date(item.START_TIME).getTime())}</p>
+                      <p className={'T05 P20'}>{item.STATUS_NUMBER != null ? item.STATUS_NUMBER == 0 
+                        ? <span className={'isStatus'}>미열람</span>
+                        : item.STATUS_NUMBER == 1
+                        ? <span className={'isStatus isContinue'}>편집대기</span>
+                        : <span className={'isStatus isComplete'}>편집완료</span>
+                        : <span className={'isStatus isNot'}>분석안됨</span>}
+                        {/* <span className={"C03"}>음성기록<span className={'styleSheet isPlay'}></span></span> */}
+                        </p>
+                    </div>
+                  </Link>
+                } else {
+                  return <div key={index} className={'C02'} onClick={e => {
+                    toast.error(`(현재 개발중입니다.) 클로바 텍스트 변환+분석이 안된 상담은 해당 고객의 당일 진료 타임라인을 보여줍니다.`);
+                  }} style={{opacity: 
                   item.CONSULT_id ? 1 : .3}}>
                     <p className={'T05 P20'}>{positionID == 11 ? <>ㅤ<span className={'isBranch'}>{item.BRANCH_NAME}</span><span className={'isPsentry'}>{item.PSENTRY}</span></> : <>{item.PSENTRY}</>}</p>
                     <p className={'T05 P20'}>{item.PSNAME}<span className={`isSex ${getSex(item.LICENSE) == '여' ? 'isRed' : 'isBlue'}`}>{getSex(item.LICENSE)}</span>{getAge(item.LICENSE)}<span className={'isAgeUnit'}>세</span></p>
@@ -323,10 +342,9 @@ export default function Consult() {
                       ? <span className={'isStatus isContinue'}>편집대기</span>
                       : <span className={'isStatus isComplete'}>편집완료</span>
                       : <span className={'isStatus isNot'}>분석안됨</span>}
-                      {/* <span className={"C03"}>음성기록<span className={'styleSheet isPlay'}></span></span> */}
                       </p>
-                  </div>
-                </Link>
+                  </div>;
+                }
               })}
               </div>
               <div className={'C04'}>

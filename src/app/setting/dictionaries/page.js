@@ -188,31 +188,31 @@ export default function Home() {
               </div>
               <div className={'C04'}>
                 <p className={'T06 styleSheet isFirst'} onClick={e => {
-                  router.push(`/setting/branches/`, {scroll: false});
+                  router.push(`/setting/dictionaries/`, {scroll: false});
                   setIndexBoard(1);
                 }}></p>
                 <p className={'T06 styleSheet isPrev'} onClick={e => {
                   if(indexBoard > 10) {
-                    router.push(`/setting/branches/?index=${Math.floor((indexBoard - 1) / 10)*10}`, {scroll: false});
+                    router.push(`/setting/dictionaries/?index=${Math.floor((indexBoard - 1) / 10)*10}`, {scroll: false});
                     setIndexBoard(Math.floor((indexBoard - 1) / 10)*10);
                   } else {
-                    router.push(`/setting/branches/?index=1`, {scroll: false});
+                    router.push(`/setting/dictionaries/?index=1`, {scroll: false});
                     setIndexBoard(1);
                   }
                 }}></p>
                 <div className={'C05'}>
                   {boardNumbers.map((item, index) => {
                     return (<p key={index} className={`T06 isPager ${(indexBoard == item.number)? `isSelected`:null}`} onClick={e => {
-                      router.push(`/setting/branches/?index=${item.number}`, {scroll: false});
+                      router.push(`/setting/dictionaries/?index=${item.number}`, {scroll: false});
                       setIndexBoard(item.number);
                     }}>{item.number}</p>)
                   })}
                 </div>
                 {Math.ceil(indexBoard / 10) != Math.ceil(totalCount / 100) ? <><p className={'T06 styleSheet isNext'} onClick={e => {
-                  router.push(`/setting/branches/?index=${Math.ceil(indexBoard / 10)*10 + 1}`, {scroll: false});
+                  router.push(`/setting/dictionaries/?index=${Math.ceil(indexBoard / 10)*10 + 1}`, {scroll: false});
                   setIndexBoard(Math.ceil(indexBoard / 10)*10 + 1);
                 }}></p><p className={'T06 styleSheet isEnd'} onClick={e => {
-                  router.push(`/setting/branches/?index=${Math.ceil(totalCount / 10)}`, {scroll: false});
+                  router.push(`/setting/dictionaries/?index=${Math.ceil(totalCount / 10)}`, {scroll: false});
                   setIndexBoard(Math.ceil(totalCount / 10));
                 }}></p></> : null}
               </div>
