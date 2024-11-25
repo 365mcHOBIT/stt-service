@@ -164,7 +164,7 @@ export default function Consult(props) {
   useEffect(() => {
     if(dataConsultInfo.START_TIME) {
       const date = dataConsultInfo.START_TIME.replace('-', '').replace('-', '').substring(0,8);
-      setSourceURL(`https://365mcstt.synology.me:8081/stt_data/${date}/${dataConsultInfo.PSENTRY}/${dataConsultInfo.WAV_FILE_NAME}`);
+      setSourceURL(`https://365mcstt.synology.me:8086/stt_data/${date}/${dataConsultInfo.PSENTRY}/${dataConsultInfo.WAV_FILE_NAME}`);
     }
     if(dataConsultInfo.BRANCH_id) boostListRoom();
   }, [dataConsultInfo])
@@ -497,6 +497,7 @@ export default function Consult(props) {
   //     }
   //   };
   //   checkFileExists();
+  // console.log(sourceURL)
   // }, [sourceURL]);
 
   const returnSpeecher = (a, c, g, s) => {
