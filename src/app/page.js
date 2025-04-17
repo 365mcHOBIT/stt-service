@@ -4,13 +4,13 @@ import styles from './page.module.css'
 import ManagerInfoTicker from './components/ManagerInfoTicker'
 import HeadlineTicker from './components/HeadlineTicker'
 import CounselorInfoTicker from './components/CounselorInfoTicker'
+import TopMenuTicker from './components/TopMenuTicker';
 import Link from 'next/link'
 import Cookies from "js-cookie"
 import jwt from "jsonwebtoken"
 import { useRouter } from 'next/navigation'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { toast } from "react-hot-toast"
-import TopMenuTicker from './components/TopMenuTicker';
 
 export default function Home() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Home() {
   const [positionID, setPositionID] = useState();
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       if(Cookies.get("USER_id")) {
         document.cookie = 'USER_id=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';

@@ -28,7 +28,7 @@ export default function Home() {
   const [dictionaryID, setDictionaryID] = useState(null);
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;

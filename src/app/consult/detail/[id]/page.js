@@ -96,11 +96,6 @@ export default function Consult(props) {
         }
       }
     }
-    // setRefTextAreas(refTextAreas =>
-    //   Array(dataSegments.length)
-    //     .fill()
-    //     .map((_, i) => refTextAreas[i] || createRef()),
-    // );
     if(Cookies.get("USER_id")) {
       setUserID(Cookies.get("USER_id"));
     }
@@ -170,7 +165,7 @@ export default function Consult(props) {
   }, [dataConsultInfo])
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;

@@ -8,7 +8,7 @@ function ProtectedPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
 
     if (!token) {
       router.replace("/login/", {scroll: false}); // If no token is found, redirect to login page
