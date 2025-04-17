@@ -34,7 +34,7 @@ export default function Home() {
         const content = await insert.json();
         if(content.success) {
           setLoader(false);
-          document.cookie = `token=${content.token}; path=/`;
+          document.cookie = `token-stt=${content.token}; path=/`;
           document.cookie = `USER_id=${content.USER_id}; path=/`;
           document.cookie = `POSITION_id=${content.POSITION_id}; path=/`;
           router.push('/', { scroll: false });

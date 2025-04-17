@@ -25,7 +25,7 @@ export default function Home() {
   const [branchID, setBranchID] = useState();
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;

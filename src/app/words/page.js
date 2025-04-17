@@ -35,7 +35,7 @@ export default function Consult() {
   const [sorting, setSorting] = useState(1);
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;
@@ -86,12 +86,16 @@ export default function Consult() {
     if(userID && positionID) {
       boostListData();
     }
-  }, [indexBoard, userID, positionID]);
+  }, [indexBoard, userID, positionID, sorting, dateFrom, dateTo]);
   
   useEffect(() => {
     updateDimensions();
     boostListDataBranches();
   }, [data]);
+
+  useEffect(() => {
+    setIndexBoard(1);
+  }, [sorting]);
 
   useLayoutEffect(() => {
     if(targetRef.current) {

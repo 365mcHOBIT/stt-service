@@ -32,7 +32,7 @@ export default function Home() {
   const [isValidated6, setValidated6] = useState(true);
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;

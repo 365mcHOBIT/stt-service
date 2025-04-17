@@ -79,7 +79,7 @@ export default function ManagerInfoTicker() {
             pointerEvents: isShowTicker ? 'auto' : 'none'}}>내 정보 수정</p></Link>
           <p className={`${styles.T02} ${styles.isNotBorder}`} onClick={e => {
             if(!isShowTicker) {
-              document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+              document.cookie = 'token-stt=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
               document.cookie = 'USER_id=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
               document.cookie = 'POSITION_id=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
               router.replace('/login/', {scroll:false})

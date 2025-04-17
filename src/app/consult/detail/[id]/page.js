@@ -47,11 +47,13 @@ export default function Consult(props) {
   const [is2xSpeed, set2xSpeed] = useState(false);
   const [currentScrollHeightIndex, setCurrentScrollHeightIndex] = useState(null);
   const [userID, setUserID] = useState();
+  const [isExistWavFile, setExistWavFile] = useState(true);
+  const [existAnalysis, setExistAnalysis] = useState(0);
 
   const handleKeyPress = e => {
     if(e.key == 'ArrowRight') {
       const player = document.getElementById('audio-player');
-      player.currentTime += 10;
+      player.currentTime += 10; 
     }
     if(e.key == 'ArrowLeft') {
       const player = document.getElementById('audio-player');
@@ -94,11 +96,6 @@ export default function Consult(props) {
         }
       }
     }
-    // setRefTextAreas(refTextAreas =>
-    //   Array(dataSegments.length)
-    //     .fill()
-    //     .map((_, i) => refTextAreas[i] || createRef()),
-    // );
     if(Cookies.get("USER_id")) {
       setUserID(Cookies.get("USER_id"));
     }
@@ -162,13 +159,13 @@ export default function Consult(props) {
   useEffect(() => {
     if(dataConsultInfo.START_TIME) {
       const date = dataConsultInfo.START_TIME.replace('-', '').replace('-', '').substring(0,8);
-      setSourceURL(`https://365mcstt.synology.me:8081/stt_data/${date}/${dataConsultInfo.PSENTRY}/${dataConsultInfo.WAV_FILE_NAME}`);
+      setSourceURL(`https://365mcstt.synology.me:8086/stt_data/${date}/${dataConsultInfo.PSENTRY}/${dataConsultInfo.WAV_FILE_NAME}`);
     }
     if(dataConsultInfo.BRANCH_id) boostListRoom();
   }, [dataConsultInfo])
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token-stt");
     if (!token) {
       router.replace("/login/", {scroll: false});
       return;
@@ -305,6 +302,7 @@ export default function Consult(props) {
         setDataArticles(content.articles);
         setDataSegments(content.segments);
         setDataSegmentsOrigin(JSON.parse(JSON.stringify(content.segments)));
+        setExistAnalysis(content.existAnalysis);
         setLoader(false);
       }else {
         setLoader(false);
@@ -476,6 +474,27 @@ export default function Consult(props) {
     ])
   }
 
+  const handleError = (err) => {
+    setExistWavFile(false);
+  }
+
+  // useEffect(() => {
+  //   const checkFileExists = async () => {
+  //     try {
+  //       const response = await fetch(sourceURL, { method: 'GET' });
+  //       if (response.ok) {
+          
+  //       } else {
+  //         setExistWavFile(false);
+  //       }
+  //     } catch (err) {
+  //       setExistWavFile(false);
+  //     }
+  //   };
+  //   checkFileExists();
+  // console.log(sourceURL)
+  // }, [sourceURL]);
+
   const returnSpeecher = (a, c, g, s) => {
     if(a == dataConsultInfo.ADMIN_id) return dataConsultInfo.ADMIN_NAME;
     if(c == dataConsultInfo.CLIENT_id) return dataConsultInfo.PSNAME;
@@ -511,7 +530,7 @@ export default function Consult(props) {
                   }}>편집모드</p>
                 </div>
               </div>
-              <p className={'T09 isAI'} onClick={e => {router.push(`/consult/analysis/${props.params.id}`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>
+              {existAnalysis > 0 ?<p className={'T09 isAI'} onClick={e => {router.push(`/consult/analysis/${props.params.id}`, {scroll: false});}}><span className={'styleSheet isAI'}></span>AI 분석</p>:<p className={styles.T20}>AI 분석 안됨</p>}
               <div className={styles.C08}>
                 <div className={styles.C06}>
                   <p className={styles.T00}>고객</p>
@@ -519,7 +538,7 @@ export default function Consult(props) {
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담기수</p>
-                  <p className={styles.T01}>{dataConsultInfo.PERIOD}</p>
+                  {dataConsultInfo.PERIOD ? <p className={styles.T01}>{`${dataConsultInfo.PERIOD}기 (${dataConsultInfo.PERIOD == 0 || dataConsultInfo.PERIOD == 1 ? '신환': '재환'})`}</p>:null}
                 </div>
                 <div className={styles.C06}>
                   <p className={styles.T00}>상담사</p>
@@ -633,7 +652,7 @@ export default function Consult(props) {
                     {dataConsultInfo.WRONG_LENGTH ? <p className={styles.T14}>결함</p> : <p className={`${styles.T14} ${styles.isValid}`}>무결</p>}
                   </div>
                 </div>
-                <div className={styles.C22} style={{display: sourceURL ? 'inline-block': 'none'}}>
+                <div className={styles.C22} style={{display: isExistWavFile ? 'inline-block': 'none'}}>
                   <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
                     const player = document.getElementById('audio-player');
                     setPlayPaused(player.paused);
@@ -670,6 +689,7 @@ export default function Consult(props) {
                     set2xSpeed(!is2xSpeed);
                   }}>x1.3</p>
                   <audio id='audio-player' src={sourceURL} type="audio/mpeg"
+                  onError={handleError}
                   onTimeUpdate={e => {
                     setCurrentTimeGage(e.currentTarget.currentTime);
                     setCurrentTime(new Date(e.currentTarget.currentTime * 1000).toISOString().slice(11, 19));
@@ -681,7 +701,7 @@ export default function Consult(props) {
                     setAudioLoad(true);
                   }} />
                 </div>
-                <p className={styles.T19} style={{display: sourceURL ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
+                <p className={styles.T19} style={{display: isExistWavFile ? 'none': 'inline-block'}}>상담 음성 파일이 없습니다.</p>
                 <p className={styles.T06} onClick={e => {
                   if(JSON.stringify(dataSegments) == JSON.stringify(dataSegmentsOrigin)) {
                     toast.success('내용 중에 변경된 게 없습니다.');
@@ -757,7 +777,7 @@ export default function Consult(props) {
             </div>
           </div>
         </div> : null}
-        {floatingPlayer && sourceURL ?
+        {floatingPlayer && isExistWavFile ?
           <div className={styles.C26}>
             <div className={`${styles.BPlay} styleSheet ${playPaused ? styles.isPaused : ''}`} onClick={e => {
               const player = document.getElementById('audio-player');

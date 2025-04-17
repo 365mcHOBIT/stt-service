@@ -14,12 +14,12 @@ export async function GET(request, { params }) {
     LEFT JOIN CORE_ADMIN_POSITION PS ON AM.POSITION_id = PS._id 
     WHERE AR.CONSULT_id = ${params.id} ORDER BY AR.createdAt DESC`);
     const articleID = data1[0].ARTICLE_ID;
-    const data2 = await ExecuteQuery(`SELECT * FROM CORE_CONSULT_SEGMENTS S LEFT JOIN CORE_GENTILES G ON S.GENTILE_id = G._id
-    WHERE S.ARTICLE_id = ${articleID} ORDER BY S.END_TIME`);
+    const data2 = await ExecuteQuery(`SELECT * FROM CORE_CONSULT_SEGMENTS S LEFT JOIN CORE_GENTILES G ON S.GENTILE_id = G._id WHERE S.ARTICLE_id = ${articleID} ORDER BY S.END_TIME`);
+    const data4 = await ExecuteQuery(`SELECT TOP 1 * FROM tsfmc_stt_system.dbo.CUSTOM_CONSULT_ABRIDGMENTS WHERE ARTICLE_id = ${articleID} AND CONSULT_id = ${params.id}`);
     if(data0.length > 0 && data0[0].STATUS_NUMBER == 0) {
       const data3 = await ExecuteQuery(`UPDATE CORE_CONSULTS SET STATUS_NUMBER = 1, updatedAt = SYSDATETIME() WHERE _id = ${params.id}`);
     }
-    return NextResponse.json({success:true, info:data0[0], articles:data1, segments:data2}, { status: 200 });
+    return NextResponse.json({success:true, info:data0[0], articles:data1, segments:data2, existAnalysis:data4.length}, { status: 200 });
   } catch(e) {
     return NextResponse.json({success:false, message:e.message}, { status: 500 });
   }

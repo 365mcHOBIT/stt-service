@@ -601,6 +601,16 @@
     line-height: 40px;
     opacity: .5;
 }
+.T20 {
+    padding:10px 17px;
+    background: rgba(248,80,103,.1);
+    width: fit-content;
+    line-height: 20px;
+    border-radius: 7.5px;
+    font-size: .9em;
+    display: inline-block;
+    color: rgba(248,80,103,1);
+}
 .popup {
     width: 100%;
     height: 100%;
